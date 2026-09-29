@@ -20,11 +20,12 @@ To ensure exact reproducibility, please use Python 3.8 and install the required 
 
 # File Description
 * :file_folder:**data**: Training, validation, and test datasets of synthetic seismic data.
-* :page_facing_up:**train_multistep.py**: Main execution scripts for the multistep deblending process.
-* :page_facing_up:**inference_multistep.py**: Standalone inference script for evaluating pre-trained models on designated gathers.
-* :page_facing_up:**bnss_dataset_builder.py**: Blending Noise Simulation-Subtraction (BNSS) module for simulating blending noise and assembling adjacent-gather datasets.
-* :page_facing_up:**unet_tool.py**: Network architecture of the lightweight U-Net and SNR evaluation metric.
-* :page_facing_up:**warmup_tool.py**: Learning rate scheduler featuring warm-up and cosine annealing decay.
+* :file_folder: **project/**: Source code directory containing model training, inference, and utility scripts.
+    * :page_facing_up:**train_multistep.py**: Main execution scripts for the multistep deblending process.
+    * :page_facing_up:**inference_multistep.py**: Standalone inference script for evaluating pre-trained models on designated gathers.
+    * :page_facing_up:**bnss_dataset_builder.py**: Simulating blending noise and assembling adjacent-gather datasets.
+    * :page_facing_up:**unet_tool.py**: Network architecture of the lightweight U-Net and SNR evaluation metric.
+    * :page_facing_up:**warmup_tool.py**: Learning rate scheduler featuring warm-up and cosine annealing decay.
 * :file_folder:**result**: The optimized model weights from the step1 and step2.
 
 # Workflow
