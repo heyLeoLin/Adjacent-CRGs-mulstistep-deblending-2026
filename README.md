@@ -1,11 +1,11 @@
-<h1 align="center">
+<img width="3619" height="1533" alt="figure 3" src="https://github.com/user-attachments/assets/220a5058-c8bb-4167-99d5-49b3d7cc0503" /><h1 align="center">
   Adjacent-CRGs-Multistep-Deblending
 </h1>
 
   **Shicong Lin, Benfeng Wang***. (Tongji University)
 
 <div align="center">
-<img width="3608" height="1460" alt="architecture" src="https://github.com/user-attachments/assets/965151ad-77be-478f-bcac-8e3def842a7c" />
+<img width="3619" height="1533" alt="figure 3" src="https://github.com/user-attachments/assets/3a9c378f-be7e-4dd5-9353-9c4eccbe8aaa" />
 </div>
 
 # Environment & requirements
@@ -34,23 +34,32 @@ To ensure exact reproducibility, please use Python 3.8 and install the required 
 2. **Multistep Training Pipeline**
 **Stage 1 deblending**: 
 Train the baseline 3-CRG U-Net model from scratch:
-`python train_multistep.py --step 1`
+```bash
+python train_multistep.py --step 1
+``` 
 Outputs: Checkpoint and predictions will be saved to `../result/3c1_step1/`.
 
 **Update Dataset (BNSS after step1)**: 
 Construct the updated 3-CRG input dataset by subtracting simulated blending noise:
-`python bnss_dataset_builder.py --step 1 --channels 3`
+```bash
+python bnss_dataset_builder.py --step 1 --channels 3
+```
 Outputs: Generates `../result/3c1_step1/data_pred_bnss.mat`.
 
 **Stage 2 & 3 deblending with transfer learning**:
 Iteratively fine-tune the model using the pre-trained weights and BNSS-updated dataset from the preceding stage:
+  
   **Stage 2**:
-  `python train_multistep.py --step 2`
-  `python bnss_dataset_builder.py --step 2 --channels 3`
+  ```bash
+  python train_multistep.py --step 2
+  python bnss_dataset_builder.py --step 2 --channels 3
+  ```
   Reads `3c1_step1` outputs and saves Stage 2 results to `../result/3c1_step2/`.
 
   **Stage 3**:
-  `python train_multistep.py --step 3`
+  ```bash
+  python train_multistep.py --step 3
+  ```
   Reads `3c1_step2` outputs and saves final results to `../result/3c1_step3/`.
 
 **Quick Run (3 steps)**:
@@ -62,29 +71,37 @@ Iteratively fine-tune the model using the pre-trained weights and BNSS-updated d
   python train_multistep.py --step 3
   ```
   
-You can also customize settings via command-line arguments:
-# Example: Train Step 2 with custom epochs, learning rate, and batch size
-`python train_multistep.py --step 2 --epochs 80 --lr 8e-4 --batch_size 4`
+**You can also customize settings via command-line arguments**:
 
-# Example: Build a 1-CRG dataset format instead of 3-CRG
-`python bnss_dataset_builder.py --step 1 --channels 1`
+**Example: Train Step 2 with custom epochs, learning rate, and batch size**:
+  ```bash
+  python train_multistep.py --step 2 --epochs 80 --lr 8e-4 --batch_size 4
+  ```
 
-1. **Standalone Inference**
+**Example: Build a 1-CRG dataset format instead of 3-CRG**:
+  ```bash
+  python bnss_dataset_builder.py --step 1 --channels 1
+  ```
+
+# Standalone Inference
 If you already have trained checkpoints and want to run inference separately without re-training:
-**Step 1 Model Inference**:
-python inference_multistep.py \
-    --step 1 \
-    --model ../result/3c1_step1/model.pth \
-    --input ../data/dataset_3channel.mat \
-    --output ../result/3c1_step1/data_pred.mat
 
+**Step 1 Model Inference**:
+  ```bash
+  python inference_multistep.py \
+      --step 1 \
+      --model ../result/3c1_step1/model.pth \
+      --input ../data/dataset_3channel.mat \
+      --output ../result/3c1_step1/data_pred.mat
+  ```
 **Step 2 and Step 3 Model Inference**:
 Run inference on the BNSS-updated dataset using the corresponding refined checkpoint (replace `<step>` with `2` or `3`, and `<input>` with `3c1_step1` or `3c1_step2`):
 
-# Example for Step 2:
-python inference_multistep.py \
-    --step 2 \
-    --model ../result/3c1_step2/model.pth \
-    --input ../result/3c1_step1/data_pred_bnss.mat \
-    --output ../result/3c1_step2/data_pred.mat
-
+**Example for Step 2**:
+  ```bash
+  python inference_multistep.py \
+      --step 2 \
+      --model ../result/3c1_step2/model.pth \
+      --input ../result/3c1_step1/data_pred_bnss.mat \
+      --output ../result/3c1_step2/data_pred.mat
+  ```
